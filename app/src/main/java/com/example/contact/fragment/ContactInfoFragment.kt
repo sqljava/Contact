@@ -1,14 +1,21 @@
 package com.example.contact.fragment
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Binder
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import com.example.contact.R
 import com.example.contact.databinding.FragmentContactInfoBinding
 import com.example.contact.model.Contact
+import com.example.contact.sql.DBHelper
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,12 +48,38 @@ class ContactInfoFragment : Fragment() {
     ): View? {
         binding = FragmentContactInfoBinding.inflate(inflater, container, false)
 
+        var db = DBHelper(requireContext())
+
         var contact:Contact = arguments?.getSerializable("contact") as Contact
 
         binding.infoName.text = contact.name
 
         binding.infoNumber.text = contact.number
-        var a = 5
+
+        var dialog = Dialog(requireContext())
+        var dialodView = layoutInflater.inflate(R.layout.delete_dialog, null)
+        var yes = dialodView.findViewById<TextView>(R.id.dialog_text_yes)
+        var no = dialodView.findViewById<TextView>(R.id.dialog_text_no)
+
+        binding.deleteImg.setOnClickListener {
+
+            dialog.setContentView(dialodView)
+
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            no.setOnClickListener{
+                dialog.hide()
+            }
+
+            yes.setOnClickListener {
+                db.deleteContact(contact.id)
+                findNavController().navigate(R.id.action_contactInfoFragment_to_homeFragment)
+                dialog.hide()
+            }
+        }
+
+
 
         return binding.root
     }
