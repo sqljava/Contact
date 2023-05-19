@@ -46,6 +46,7 @@ class ContactInfoFragment : Fragment() {
         binding.infoName.text = contact.name
 
         binding.infoNumber.text = contact.number
+        var a = 5
 
         return binding.root
     }
