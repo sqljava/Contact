@@ -77,9 +77,9 @@ class DBHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null, 
         if (cursor.moveToFirst()){
 
             do {
-                contactId = cursor.getInt(cursor.getColumnIndex("ID"))
-                contactName = cursor.getString(cursor.getColumnIndex("NAME"))
-                contactNumber= cursor.getString(cursor.getColumnIndex("NUMBER"))
+                contactId = cursor.getInt(cursor.getColumnIndex(CONTACT_ID))
+                contactName = cursor.getString(cursor.getColumnIndex(CONTACT_NAME))
+                contactNumber= cursor.getString(cursor.getColumnIndex(CONTACT_NUMBER))
 
                 var contact = Contact(contactId, contactName, contactNumber)
                 contacts.add(contact)

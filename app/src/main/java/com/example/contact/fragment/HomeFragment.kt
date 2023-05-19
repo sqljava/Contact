@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,16 +51,21 @@ class HomeFragment : Fragment() {
 
         contacts = db.getAllContacts()
 
-        contacts.add(Contact(0,"qwer", "+9983165432"))
+        //contacts.add(Contact(0,"qwer", "+9983165432"))
 
-        var adapter = ContactAdapter(contacts)
+        var adapter = ContactAdapter(contacts, object : ContactAdapter.ContactInterface{
+            override fun onClick(contact: Contact) {
+                var bundle = bundleOf()
+                bundle.putSerializable("contact", contact)
+                findNavController().navigate(R.id.action_homeFragment_to_contactInfoFragment, bundle)
+            }
+
+        })
         var manager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
 
         binding.rvContact.adapter = adapter
         binding.rvContact.layoutManager = manager
-
-        adapter.notifyDataSetChanged()
 
 
         binding.btnAdd.setOnClickListener {
