@@ -34,5 +34,17 @@
         <action
             android:id="@+id/action_contactInfoFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_contactInfoFragment_to_editContactFragment"
+            app:destination="@id/editContactFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editContactFragment"
+        android:name="com.example.contact.fragment.EditContactFragment"
+        android:label="fragment_edit_contact"
+        tools:layout="@layout/fragment_edit_contact" >
+        <action
+            android:id="@+id/action_editContactFragment_to_contactInfoFragment"
+            app:destination="@id/contactInfoFragment" />
     </fragment>
 </navigation>

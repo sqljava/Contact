@@ -54,8 +54,35 @@ class DBHelper(context: Context):SQLiteOpenHelper(context, DATABASE_NAME, null, 
 
         var clause = "$CONTACT_ID = ${contact.id}"
 
-        db.update(DATABASE_NAME, contentValues, clause, null)
+        db.update(TABLE_CONTACT, contentValues, clause, null)
         db.close()
+
+    }
+
+    @SuppressLint("Range")
+    fun getContact(id : Int):Contact{
+        var db = this.readableDatabase
+
+        var query = "SELECT * FROM $TABLE_CONTACT WHERE $CONTACT_ID = $id"
+
+        var cursor : Cursor? = null
+        cursor = db.rawQuery(query, null)
+
+        if (cursor!=null)
+            cursor.moveToFirst()
+
+        var contactId : Int
+        var contactName : String
+        var contactNumber : String
+
+        contactId = cursor.getInt(0)
+        contactName = cursor.getString(1)
+        contactNumber= cursor.getString(2)
+
+        var contact = Contact(contactId, contactName, contactNumber)
+
+        return contact
+
 
     }
 

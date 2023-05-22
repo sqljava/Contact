@@ -52,6 +52,8 @@ class AddContactFragment : Fragment() {
 
 
 
+
+
         binding.btnDone.setOnClickListener {
             //if (isEntered()){
 

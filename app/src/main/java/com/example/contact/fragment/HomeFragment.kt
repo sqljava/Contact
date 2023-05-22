@@ -1,10 +1,9 @@
 package com.example.contact.fragment
 
 import android.os.Bundle
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,8 +32,11 @@ class HomeFragment : Fragment() {
     lateinit var binding: FragmentHomeBinding
     var contacts = arrayListOf<Contact>()
 
+    lateinit var adapter:ContactAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -48,18 +50,15 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         var db = DBHelper(requireContext())
-
         contacts = db.getAllContacts()
 
-        //contacts.add(Contact(0,"qwer", "+9983165432"))
-
-        var adapter = ContactAdapter(contacts, object : ContactAdapter.ContactInterface{
+         adapter = ContactAdapter(contacts, object : ContactAdapter.ContactInterface{
             override fun onClick(contact: Contact) {
                 var bundle = bundleOf()
-                bundle.putSerializable("contact", contact)
+                //bundle.putSerializable("contact", contact)
+                bundle.putInt("id", contact.id)
                 findNavController().navigate(R.id.action_homeFragment_to_contactInfoFragment, bundle)
             }
-
         })
         var manager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
 
@@ -75,16 +74,48 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu, menu)
+
+        var searchItem = menu.findItem(R.id.search)
+        var searchView = searchItem.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                mySearch(query.toString())
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                mySearch(newText.toString())
+                return true
+            }
+
+        })
+    }
+
+    fun mySearch(query: String){
+        var conts = arrayListOf<Contact>()
+
+        for (i in contacts){
+            if (i.name.contains(query)){
+                conts.add(i)
+            }
+        }
+
+        adapter = ContactAdapter(conts, object : ContactAdapter.ContactInterface{
+            override fun onClick(contact: Contact) {
+                var bundle = bundleOf()
+                //bundle.putSerializable("contact", contact)
+                bundle.putInt("id", contact.id)
+                findNavController().navigate(R.id.action_homeFragment_to_contactInfoFragment, bundle)
+            }
+        })
+
+
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             HomeFragment().apply {
