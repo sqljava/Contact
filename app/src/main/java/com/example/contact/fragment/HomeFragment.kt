@@ -3,6 +3,7 @@ package com.example.contact.fragment
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -52,7 +53,7 @@ class HomeFragment : Fragment() {
         var db = DBHelper(requireContext())
         contacts = db.getAllContacts()
 
-         adapter = ContactAdapter(contacts, object : ContactAdapter.ContactInterface{
+         adapter = ContactAdapter(requireContext(),contacts, object : ContactAdapter.ContactInterface{
             override fun onClick(contact: Contact) {
                 var bundle = bundleOf()
                 //bundle.putSerializable("contact", contact)
@@ -103,7 +104,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        adapter = ContactAdapter(conts, object : ContactAdapter.ContactInterface{
+        adapter = ContactAdapter(requireContext(), conts, object : ContactAdapter.ContactInterface{
             override fun onClick(contact: Contact) {
                 var bundle = bundleOf()
                 //bundle.putSerializable("contact", contact)

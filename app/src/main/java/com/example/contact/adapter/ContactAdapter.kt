@@ -1,14 +1,16 @@
 package com.example.contact.adapter
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contact.databinding.ContactItemBinding
 import com.example.contact.model.Contact
 
-class ContactAdapter(var list: ArrayList<Contact>, var contactInterface: ContactAdapter.ContactInterface) : RecyclerView.Adapter<ContactAdapter.ContactHolder>() {
+class ContactAdapter(var context:Context, var list: ArrayList<Contact>, var contactInterface: ContactAdapter.ContactInterface) : RecyclerView.Adapter<ContactAdapter.ContactHolder>() {
     class ContactHolder(binding:ContactItemBinding):
         RecyclerView.ViewHolder(binding.root){
         var name = binding.contactName
@@ -38,9 +40,10 @@ class ContactAdapter(var list: ArrayList<Contact>, var contactInterface: Contact
 
 
         holder.call.setOnClickListener {
-            val phone_intent = Intent(Intent.ACTION_CALL)
-
-            phone_intent.data = Uri.parse("tel:${list[list.size].number}")
+            val call = Intent(Intent.ACTION_DIAL)
+            call.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            call.data = Uri.parse("tel:" + list[position].number)
+            startActivity(context, call, null)
         }
     }
 
